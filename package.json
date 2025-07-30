@@ -9,9 +9,6 @@
     "format": "prettier --write .",
     "prepare": "husky"
   },
-    "lint-staged": {
-      "**/*": "prettier --write --ignore-unknown"
-    },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/vlad-dvlad/todo-backend.git"
