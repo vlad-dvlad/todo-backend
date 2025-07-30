@@ -1,0 +1,19 @@
+{
+  "name": "todo-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vlad-dvlad/todo-backend.git"
+  },
+  "author": "vlad-dvlad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vlad-dvlad/todo-backend/issues"
+  },
+  "homepage": "https://github.com/vlad-dvlad/todo-backend#readme",
+  "description": ""
+}
