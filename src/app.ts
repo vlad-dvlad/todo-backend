@@ -1,10 +1,9 @@
-import express from 'express';
-import task from './routes/task';
+import express from 'express'
+import task from './routes/task'
 
-const app = express();
-app.use(express.json());
+const app = express()
+app.use(express.json())
 
-app.use('/tasks', task);
+app.use('/tasks', task)
 
-
-export default app;
+export default app
