@@ -1,5 +1,5 @@
-import z from "zod";
-import { userSchema } from "../types/user";
+import z from 'zod'
+import { userSchema } from '../types/user'
 
 export const createUserSchema = userSchema.pick({ name: true, age: true, email: true })
 export const updateUserSchema = userSchema.pick({ name: true, age: true, email: true })

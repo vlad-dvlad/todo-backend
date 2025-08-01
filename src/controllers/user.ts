@@ -9,22 +9,22 @@ export const getUsers = (req: Request, res: Response) => {
 }
 
 export const getUserById = (req: Request, res: Response) => {
-    const { id } = req.params;
-    // mock data
-    const user = UserModel.findById(id)
-    if (!user) {
-        return res.status(404).json({ error: 'User not found!' })
-    }
+  const { id } = req.params
+  // mock data
+  const user = UserModel.findById(id)
+  if (!user) {
+    return res.status(404).json({ error: 'User not found!' })
+  }
 }
 
 export const createUser = (req: Request, res: Response) => {
-    const result = createUserSchema.safeParse(req.body)
-    if(!result.success) {
-        return res.status(400).json({ error: result.error })
-    }
-    // mock data
-    const user = UserModel.create(result.data)
-    res.status(201).json(user)
+  const result = createUserSchema.safeParse(req.body)
+  if (!result.success) {
+    return res.status(400).json({ error: result.error })
+  }
+  // mock data
+  const user = UserModel.create(result.data)
+  res.status(201).json(user)
 }
 
 export const updateUser = (req: Request, res: Response) => {
