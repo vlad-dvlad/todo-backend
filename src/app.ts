@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 
 app.use('/tasks', task)
-app.use('/category', category)
+app.use('/categories', category)
 app.use('/users', user)
 
 export default app
