@@ -4,7 +4,7 @@ export const taskStatus = z.enum(['DONE', 'IN_PROGRESS', 'TODO', 'REJECTED'])
 
 export const taskSchema = z.object({
   id: z.string(),
-  name: z.string().min(1),
+  name: z.string().min(2),
   category: z.string(),
   status: z.enum(['DONE', 'IN_PROGRESS', 'TODO', 'REJECTED']),
   createdAt: z.string(),
