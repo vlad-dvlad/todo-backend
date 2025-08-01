@@ -2,7 +2,7 @@ import { User } from '../types/user'
 import { CreateUser, UpdateUser } from '../utils/user'
 
 const users: User[] = [
-    {
+  {
     id: 'u1',
     name: 'Alice Johnson',
     email: 'alice.johnson@example.com',

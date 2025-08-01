@@ -2,7 +2,7 @@ import { Category } from '../types/category'
 import { CreateCategory, UpdateCategory } from '../utils/category'
 
 const categories: Category[] = [
-    {
+  {
     id: 'c1',
     name: 'Frontend',
     createdAt: '2025-06-01T09:00:00Z',

@@ -82,7 +82,7 @@ const tasks: Task[] = [
     status: 'REJECTED',
     createdAt: '2025-07-13T13:50:00Z',
     updatedAt: '2025-07-13T14:15:00Z',
-  }
+  },
 ]
 
 export const TaskModel = {

@@ -2,6 +2,13 @@
   "name": "todo-backend",
   "version": "1.0.0",
   "main": "index.ts",
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
