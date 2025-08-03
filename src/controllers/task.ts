@@ -1,50 +1,80 @@
 import { Request, Response } from 'express'
-import { TaskModel } from '../models/task'
-import { createTaskSchema } from '../utils/tasks'
+import { createTaskSchema, updateTaskSchema } from '../utils/tasks'
 
-export const getTasks = (req: Request, res: Response) => {
-  const tasks = TaskModel.findAll()
-  // mock data
-  res.json(tasks)
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+export const getTasks = async (req: Request, res: Response) => {
+  try {
+    const data = await prisma.task.findMany()
+    res.json(data)
+  } catch (e) {
+    res.send(e)
+  }
 }
 
-export const getTaskById = (req: Request, res: Response) => {
-  const { id } = req.params
-  // mock data
-  const task = TaskModel.findById(id)
-  if (!task) {
-    return res.status(404).json({ error: 'Task not found' })
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const task = await prisma.task.findUnique({
+      where: {
+        id: +req.params.id,
+      },
+    })
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' })
+    }
+    res.json(task)
+  } catch (e) {
+    res.send(e)
   }
-  res.json(task)
 }
 
-export const createTask = (req: Request, res: Response) => {
-  const result = createTaskSchema.safeParse(req.body)
-  if (!result.success) {
-    return res.status(400).json({ error: result.error })
+export const createTask = async (req: Request, res: Response) => {
+  try {
+    const result = createTaskSchema.safeParse(req.body)
+    if (!result.success) {
+      return res.status(400).json({ error: result.error })
+    }
+    const task = await prisma.task.create({
+      data: req.body,
+    })
+    res.status(201).json(task)
+  } catch (e) {
+    res.send(e)
   }
-  // mock data
-  const task = TaskModel.create(result.data)
-  res.status(201).json(task)
 }
 
-export const updateTask = (req: Request, res: Response) => {
-  const id = req.params.id
-  // mock data
-  const updated = TaskModel.update(id, req.body)
-  if (!updated) {
-    return res.status(404).json({ error: 'Not found' })
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    const id = +req.params.id
+    const updated = updateTaskSchema.safeParse(req.body)
+    if (!updated.success) {
+      return res.status(400).json({ error: updated.error })
+    }
+    const task = await prisma.task.update({
+      where: {
+        id,
+      },
+      data: req.body,
+    })
+    res.json(task)
+  } catch (e) {
+    res.send(e)
   }
-
-  res.json(updated)
 }
 
-export const deleteTask = (req: Request, res: Response) => {
-  const id = req.params.id
-  // mock data
-  const deleted = TaskModel.delete(id)
-  if (!deleted) {
-    return res.status(404).json({ error: 'Not found' })
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const id = +req.params.id
+    // mock data
+    const response = await prisma.task.delete({
+      where: {
+        id: id,
+      },
+    })
+    res.status(204).send({ message: `Task with id: ${response.id} deleted` })
+  } catch (e) {
+    res.send(e)
   }
-  res.status(204).send()
 }

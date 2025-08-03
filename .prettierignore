@@ -7,3 +7,5 @@ eslint.config.ts
 tsconfig.json
 gitignore
 .prettierrc
+./prisma
+./generated
