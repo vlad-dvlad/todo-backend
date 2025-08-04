@@ -18,6 +18,8 @@ model Task {
   id Int @id @default(autoincrement())
   name String
   status Status @default(TODO)
+  assignedUser User?     @relation(fields: [assignedUserId], references: [id])
+  assignedUserId Int?
   createdAt DateTime  @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -29,4 +31,5 @@ model User {
   age   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime @updatedAt
+  tasks Task[]
 }

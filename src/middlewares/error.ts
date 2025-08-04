@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prisma } from '@prisma/client'
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 
 type AppError = {
@@ -8,7 +9,7 @@ type AppError = {
   details?: string
 }
 
-export const errorMiddleware = (err: unknown, req: Request, res: Response) => {
+export const errorMiddleware = (err: unknown, req: Request, res: Response, next: NextFunction) => {
   const customError: AppError = {
     status: 500,
     message: 'Something went wrong',

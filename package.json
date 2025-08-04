@@ -12,6 +12,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "serve": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
@@ -46,6 +47,7 @@
     "husky": "^9.1.7",
     "jiti": "^2.5.1",
     "lint-staged": "^16.1.2",
+    "nodemon": "^3.1.10",
     "prettier": "3.6.2",
     "prisma": "^6.13.0",
     "ts-node": "^10.9.2",

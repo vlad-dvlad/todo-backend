@@ -6,7 +6,11 @@ const prisma = new PrismaClient()
 
 export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await prisma.task.findMany()
+    const data = await prisma.task.findMany({
+      include: {
+        assignedUser: true,
+      },
+    })
     res.json(data)
   } catch (e) {
     next(e)
