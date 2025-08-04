@@ -3,19 +3,40 @@ import { CreateTask, UpdateTask } from '../utils/tasks'
 
 const prisma = new PrismaClient()
 
-export const getAllTasks = async () => {
-  const data = await prisma.task.findMany({
-    include: {
-      assignedUser: true,
-    },
-  })
-  return data
+export const getAllTasks = async (page: number, limit: number) => {
+  const skip = (page - 1) * limit
+  const [items, total] = await Promise.all([
+    prisma.task.findMany({
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        assignedUser: true,
+      },
+    }),
+    prisma.task.count(),
+  ])
+
+  const hasNextPage = skip + items.length < total
+
+  return {
+    total,
+    hasNextPage,
+    prev: page > 1 ? page - 1 : null,
+    next: hasNextPage ? page + 1 : null,
+    items,
+  }
 }
 
 export const getTaskbyId = async (id: number) => {
   const task = await prisma.task.findUnique({
     where: {
-      id: id,
+      id,
+    },
+    include: {
+      assignedUser: true,
     },
   })
 
