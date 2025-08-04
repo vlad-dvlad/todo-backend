@@ -50,3 +50,32 @@ export const deleteTask = async (id: number) => {
 
   return task
 }
+
+export const assignUser = async (id: number, userId: number) => {
+  const task = await prisma.task.update({
+    where: {
+      id,
+    },
+    data: {
+      assignedUserId: userId,
+    },
+    include: {
+      assignedUser: true,
+    },
+  })
+
+  return task
+}
+
+export const unassignedUser = async (id: number) => {
+  const task = await prisma.task.update({
+    where: {
+      id,
+    },
+    data: {
+      assignedUserId: null,
+    },
+  })
+
+  return task
+}

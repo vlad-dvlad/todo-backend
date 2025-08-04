@@ -79,3 +79,24 @@ export const deleteTask = async (req: Request, res: Response, next: NextFunction
     next(e)
   }
 }
+
+export const assignUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId }: { userId: number } = req.body
+    const data = await taskService.assignUser(+req.params.id, +userId)
+
+    res.json(data)
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const unassignedUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await taskService.unassignedUser(+req.params.id)
+
+    res.json(data)
+  } catch (e) {
+    next(e)
+  }
+}
