@@ -1,12 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { createUserSchema, updateUserSchema } from '../utils/user'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import * as userService from '../services/user'
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await prisma.user.findMany()
+    const data = await userService.getUsers()
     res.json(data)
   } catch (e) {
     next(e)
@@ -15,15 +13,13 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: +req.params.id,
-      },
-    })
+    const data = await userService.getUserById(+req.params.id)
 
-    if (!user) {
+    if (!data) {
       return res.status(404).json({ error: 'User not found!' })
     }
+
+    res.json(data)
   } catch (e) {
     next(e)
   }
@@ -32,16 +28,13 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = createUserSchema.safeParse(req.body)
+
     if (!result.success) {
       throw result.error
     }
-    const user = await prisma.user.create({ data: req.body })
+    const data = await userService.createUser(req.body)
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found!' })
-    }
-
-    res.status(201).json(user)
+    res.status(201).json(data)
   } catch (e) {
     next(e)
   }
@@ -53,18 +46,14 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     if (!result.success) {
       throw result.error
     }
-    const user = await prisma.user.update({
-      where: {
-        id: +req.params.id,
-      },
-      data: req.body,
-    })
 
-    if (!user) {
+    const data = await userService.updateUser(+req.params.id, req.body)
+
+    if (!data) {
       return res.status(404).json({ error: 'User not found!' })
     }
 
-    res.json(user)
+    res.json(data)
   } catch (e) {
     next(e)
   }
@@ -72,17 +61,13 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await prisma.user.delete({
-      where: {
-        id: +req.params.id,
-      },
-    })
+    const data = await userService.deleteUser(+req.params.id)
 
-    if (!user) {
+    if (!data) {
       return res.status(404).json({ error: 'User not found!' })
     }
 
-    res.status(204).send({ message: `User with id: ${user.id} deleted` })
+    res.status(204).send({ message: `User with id: ${data.id} deleted` })
   } catch (e) {
     next(e)
   }
