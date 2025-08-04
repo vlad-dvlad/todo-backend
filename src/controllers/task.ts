@@ -4,9 +4,8 @@ import * as taskService from '../services/task'
 
 export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const page = parseInt(req.query.page as string) || 1
-    const limit = parseInt(req.query.limit as string) || 10
-    const data = await taskService.getAllTasks(page, limit)
+    const { page = 1, limit = 10 } = req.query
+    const data = await taskService.getAllTasks(+page, +limit)
     res.json(data)
   } catch (e) {
     next(e)
