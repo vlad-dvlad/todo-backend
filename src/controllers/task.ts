@@ -1,19 +1,19 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { createTaskSchema, updateTaskSchema } from '../utils/tasks'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export const getTasks = async (req: Request, res: Response) => {
+export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await prisma.task.findMany()
     res.json(data)
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
 
-export const getTaskById = async (req: Request, res: Response) => {
+export const getTaskById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const task = await prisma.task.findUnique({
       where: {
@@ -25,31 +25,36 @@ export const getTaskById = async (req: Request, res: Response) => {
     }
     res.json(task)
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
 
-export const createTask = async (req: Request, res: Response) => {
+export const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = createTaskSchema.safeParse(req.body)
     if (!result.success) {
-      return res.status(400).json({ error: result.error })
+      throw result.error
     }
     const task = await prisma.task.create({
       data: req.body,
     })
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' })
+    }
+
     res.status(201).json(task)
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
 
-export const updateTask = async (req: Request, res: Response) => {
+export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = +req.params.id
-    const updated = updateTaskSchema.safeParse(req.body)
-    if (!updated.success) {
-      return res.status(400).json({ error: updated.error })
+    const result = updateTaskSchema.safeParse(req.body)
+    if (!result.success) {
+      throw result.error
     }
     const task = await prisma.task.update({
       where: {
@@ -57,23 +62,32 @@ export const updateTask = async (req: Request, res: Response) => {
       },
       data: req.body,
     })
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' })
+    }
+
     res.json(task)
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
 
-export const deleteTask = async (req: Request, res: Response) => {
+export const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = +req.params.id
-    // mock data
-    const response = await prisma.task.delete({
+    const task = await prisma.task.delete({
       where: {
         id: id,
       },
     })
-    res.status(204).send({ message: `Task with id: ${response.id} deleted` })
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' })
+    }
+
+    res.status(204).send({ message: `Task with id: ${task.id} deleted` })
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
